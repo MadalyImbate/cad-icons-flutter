@@ -1,0 +1,15 @@
+# Exclude website and development files from pub.dev package archive
+.github/
+.idea/
+.vscode/
+scripts/
+icons/
+icons-data.js
+icons.json
+index.html
+style.css
+app.js
+package.json
+package-lock.json
+flutter/
+*.log

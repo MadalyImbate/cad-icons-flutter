@@ -1,0 +1,31 @@
+name: cad_icons_flutter
+description: A comprehensive collection of 250+ CAD and technical vector icons for Flutter, natively compatible with IconTheme.
+version: 1.0.0
+homepage: https://github.com/MadalyImbate/cad-icons-flutter
+repository: https://github.com/MadalyImbate/cad-icons-flutter
+issue_tracker: https://github.com/MadalyImbate/cad-icons-flutter/issues
+
+topics:
+  - icons
+  - cad
+  - vector
+  - svg
+  - flutter
+
+environment:
+  sdk: ^3.0.0
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_svg: ^2.0.10+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  assets:
+    - assets/icons/

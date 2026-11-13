@@ -1,0 +1,27 @@
+{
+  "name": "cad-icons-flutter",
+  "version": "1.0.0",
+  "description": "Catálogo online e pacote Flutter com mais de 250 ícones CAD vetoriais com suporte nativo a IconTheme e hover preview.",
+  "main": "index.html",
+  "scripts": {
+    "build:data": "node scripts/build-data.js && node scripts/generate-enum.js",
+    "preview": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": [
+    "flutter",
+    "cad",
+    "icons",
+    "svg",
+    "flutter-svg",
+    "vector",
+    "pub-dev",
+    "catalog"
+  ],
+  "author": "Madaly Imbate",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MadalyImbate/cad-icons-flutter.git"
+  }
+}

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAD Icons Flutter - Catálogo Online & Package pub.dev</title>
+  <meta name="description" content="Catálogo online e pacote pub.dev com mais de 250 ícones CAD vetoriais para Flutter com compatibilidade nativa com IconTheme e preview ao passar o mouse.">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/coordinates-3d-xyz.svg">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-dark">
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zm0 8.5L4.5 7 12 3.5 19.5 7 12 10.5zm-10 4l10 5 10-5-1.8-0.9L12 17.5 3.8 13.6 2 14.5zm0 4.5l10 5 10-5-1.8-0.9L12 22 3.8 18.1 2 19z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">CAD Icons <span>Flutter</span></h1>
+          <p class="brand-subtitle">Pacote pub.dev • 250+ Ícones com IconTheme</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Live Color Picker for Grid -->
+        <div class="color-picker-control" title="Cor dos ícones no catálogo">
+          <span class="control-label">Cor:</span>
+          <div class="color-swatches">
+            <button class="color-dot active" data-color="#38bdf8" style="background: #38bdf8;" title="Flutter Cyan / Blue"></button>
+            <button class="color-dot" data-color="#10b981" style="background: #10b981;" title="Emerald"></button>
+            <button class="color-dot" data-color="#f59e0b" style="background: #f59e0b;" title="Amber"></button>
+            <button class="color-dot" data-color="#ec4899" style="background: #ec4899;" title="Pink"></button>
+            <button class="color-dot" data-color="#ffffff" style="background: #ffffff;" title="White"></button>
+            <label class="color-dot custom-color-btn" title="Cor personalizada">
+              <input type="color" id="gridCustomColor" value="#38bdf8">
+            </label>
+          </div>
+        </div>
+
+        <!-- Grid Icon Size Toggle -->
+        <div class="size-toggle-group" title="Tamanho dos ícones na grade">
+          <button class="size-btn" data-size="sm">P</button>
+          <button class="size-btn active" data-size="md">M</button>
+          <button class="size-btn" data-size="lg">G</button>
+        </div>
+
+        <!-- Package pub.dev badge button -->
+        <a href="https://pub.dev/packages/cad_icons_flutter" target="_blank" rel="noopener" class="action-btn pub-btn" title="Ver no pub.dev">
+          <span class="pub-badge">pub.dev</span>
+          <span class="pub-ver">v1.0.0</span>
+        </a>
+
+        <!-- Flutter Setup Button -->
+        <button id="openGuideBtn" class="action-btn guide-btn" title="Como instalar e usar o package">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+          </svg>
+          <span>Instalar Package</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button id="themeToggleBtn" class="action-btn icon-only-btn" title="Alternar tema Claro/Escuro">
+          <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12.3 2a10 10 0 0 0-1.9 19.8 9.9 9.9 0 0 0 9.4-6.4 1 1 0 0 0-1.2-1.3 8 8 0 0 1-9.6-9.6 1 1 0 0 0-1.3-1.2A9.9 9.9 0 0 0 12.3 2z"/>
+          </svg>
+        </button>
+
+        <!-- GitHub Repo Link -->
+        <a href="https://github.com/MadalyImbate/cad-icons-flutter" target="_blank" rel="noopener" class="action-btn icon-only-btn" title="Ver código no GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Search and Filter Bar -->
+    <div class="search-filter-section">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Pesquisar ícones... (ex: 3d, cube, constraint, dwg, tool, fillet)" autocomplete="off" spellcheck="false">
+        <button id="clearSearchBtn" class="clear-btn" title="Limpar busca">✕</button>
+        <kbd class="shortcut-badge" title="Pressione / para focar">/</kbd>
+      </div>
+
+      <div class="categories-bar" id="categoriesBar">
+        <!-- Categories injected dynamically -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <!-- Meta stats bar -->
+    <div class="stats-bar">
+      <div class="stats-count">
+        Exibindo <span id="visibleCount" class="highlight-count">0</span> de <span id="totalCount">0</span> ícones
+        <span id="activeFilterBadge" class="filter-badge hidden"></span>
+      </div>
+      <div class="quick-tips">
+        <span class="tip-pill">✨ Instale via <code>flutter pub add cad_icons_flutter</code></span>
+      </div>
+    </div>
+
+    <!-- Icons Grid -->
+    <div class="icons-grid size-md" id="iconsGrid">
+      <!-- Icons rendered via JavaScript -->
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state hidden" id="emptyState">
+      <div class="empty-icon">🔍</div>
+      <h3>Nenhum ícone encontrado</h3>
+      <p>Nenhum resultado corresponde à busca "<span id="emptyQueryText"></span>".</p>
+      <button id="resetSearchBtn" class="btn-primary">Limpar filtros e busca</button>
+    </div>
+  </main>
+
+  <!-- Icon Detail Modal -->
+  <div class="modal-overlay hidden" id="detailModal">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2 id="modalIconTitle" class="modal-title">Draw 3D Cube</h2>
+          <span id="modalIconCategory" class="modal-category">3D Solids & Shapes</span>
+        </div>
+        <div class="modal-nav-actions">
+          <button id="modalPrevBtn" class="nav-arrow-btn" title="Ícone anterior (Seta esquerda)">←</button>
+          <button id="modalNextBtn" class="nav-arrow-btn" title="Próximo ícone (Seta direita)">→</button>
+          <button id="modalCloseBtn" class="modal-close-btn" title="Fechar (Esc)">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <!-- Left Column: Interactive Visual Preview -->
+        <div class="modal-preview-col">
+          <div class="preview-box" id="modalPreviewBox">
+            <div id="modalSvgContainer" class="svg-container"></div>
+          </div>
+
+          <div class="preview-controls">
+            <!-- Background Toggle -->
+            <div class="control-row">
+              <span class="control-title">Fundo:</span>
+              <div class="bg-toggle-group">
+                <button class="bg-btn active" data-bg="checker-dark" title="Quadriculado Escuro">▨ Escuro</button>
+                <button class="bg-btn" data-bg="checker-light" title="Quadriculado Claro">▦ Claro</button>
+                <button class="bg-btn" data-bg="solid-dark" title="Preto Sólido">■ Preto</button>
+                <button class="bg-btn" data-bg="solid-light" title="Branco Sólido">□ Branco</button>
+              </div>
+            </div>
+
+            <!-- Size Slider -->
+            <div class="control-row">
+              <span class="control-title">Tamanho: <span id="modalSizeVal">48px</span></span>
+              <input type="range" id="modalSizeSlider" min="16" max="128" step="4" value="48" class="range-slider">
+            </div>
+
+            <!-- Color Palette & Custom Color -->
+            <div class="control-row">
+              <span class="control-title">Cor Flutter:</span>
+              <div class="modal-color-swatches">
+                <button class="m-color-dot active" data-color="#38bdf8" data-flutter="Colors.lightBlue" style="background: #38bdf8;"></button>
+                <button class="m-color-dot" data-color="#2563eb" data-flutter="Colors.blue" style="background: #2563eb;"></button>
+                <button class="m-color-dot" data-color="#10b981" data-flutter="Colors.emerald" style="background: #10b981;"></button>
+                <button class="m-color-dot" data-color="#f59e0b" data-flutter="Colors.amber" style="background: #f59e0b;"></button>
+                <button class="m-color-dot" data-color="#ef4444" data-flutter="Colors.red" style="background: #ef4444;"></button>
+                <button class="m-color-dot" data-color="#a855f7" data-flutter="Colors.purple" style="background: #a855f7;"></button>
+                <button class="m-color-dot" data-color="#ffffff" data-flutter="Colors.white" style="background: #ffffff;"></button>
+                <button class="m-color-dot" data-color="#0f172a" data-flutter="Colors.black" style="background: #0f172a;"></button>
+                <label class="m-color-dot custom-picker-label" title="Hexadecimal personalizado">
+                  <input type="color" id="modalCustomColor" value="#38bdf8">
+                </label>
+              </div>
+            </div>
+
+            <!-- Download Button -->
+            <button id="downloadSvgBtn" class="btn-outline full-width">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+              </svg>
+              Baixar Arquivo SVG (.svg)
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Flutter Snippets -->
+        <div class="modal-code-col">
+          <div class="code-tabs">
+            <button class="tab-btn active" data-tab="package">CadIcons</button>
+            <button class="tab-btn" data-tab="asset">SvgPicture.asset</button>
+            <button class="tab-btn" data-tab="string">SvgPicture.string</button>
+            <button class="tab-btn" data-tab="raw">SVG Puro</button>
+          </div>
+
+          <div class="tab-content">
+            <!-- Package Tab -->
+            <div class="tab-pane active" id="tab-package">
+              <div class="code-header">
+                <span class="code-lang">Uso no Flutter (CadIcons)</span>
+                <button class="copy-code-btn" data-target="code-package">Copiar Código</button>
+              </div>
+              <pre><code id="code-package"></code></pre>
+              <div class="code-note">
+                <strong>Recomendado:</strong> Suporte nativo a <code>IconTheme</code> e hover preview automático na IDE!
+              </div>
+            </div>
+
+            <!-- Asset Tab -->
+            <div class="tab-pane" id="tab-asset">
+              <div class="code-header">
+                <span class="code-lang">flutter_svg via package</span>
+                <button class="copy-code-btn" data-target="code-asset">Copiar Código</button>
+              </div>
+              <pre><code id="code-asset"></code></pre>
+              <div class="code-note">
+                Carrega o asset direto do bundle de <code>cad_icons_flutter</code>.
+              </div>
+            </div>
+
+            <!-- String Tab -->
+            <div class="tab-pane" id="tab-string">
+              <div class="code-header">
+                <span class="code-lang">Inline SVG (Sem dependências)</span>
+                <button class="copy-code-btn" data-target="code-string">Copiar Código</button>
+              </div>
+              <pre><code id="code-string"></code></pre>
+              <div class="code-note">
+                SVG direto no código Dart, sem assets externos.
+              </div>
+            </div>
+
+            <!-- Raw Tab -->
+            <div class="tab-pane" id="tab-raw">
+              <div class="code-header">
+                <span class="code-lang">XML / SVG Markup</span>
+                <button class="copy-code-btn" data-target="code-raw">Copiar SVG</button>
+              </div>
+              <pre><code id="code-raw"></code></pre>
+            </div>
+          </div>
+
+          <!-- Quick Copy Enum Path -->
+          <div class="asset-path-box">
+            <span class="path-label">Enum:</span>
+            <code id="modalEnumText">CadIcon.draw3dCube</code>
+            <button id="copyEnumBtn" class="copy-pill-btn">Copiar Enum</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flutter Setup Guide Modal -->
+  <div class="modal-overlay hidden" id="guideModal">
+    <div class="modal-backdrop" id="guideBackdrop"></div>
+    <div class="modal-container guide-container">
+      <div class="modal-header">
+        <h2 class="modal-title">Como usar o package no seu Projeto Flutter</h2>
+        <button id="guideCloseBtn" class="modal-close-btn">✕</button>
+      </div>
+      <div class="modal-body guide-body">
+        <div class="guide-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Instalar o pacote via pub.dev</h3>
+            <p>No terminal do seu projeto Flutter, execute:</p>
+            <pre><code>flutter pub add cad_icons_flutter</code></pre>
+            <p>Ou adicione no seu <code>pubspec.yaml</code>:</p>
+            <pre><code>dependencies:
+  flutter:
+    sdk: flutter
+  cad_icons_flutter: ^1.0.0</code></pre>
+          </div>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Zero configuração de assets!</h3>
+            <p>Você <strong>não</strong> precisa copiar pastas de ícones nem declarar <code>assets:</code> no seu <code>pubspec.yaml</code>. Os 250+ ícones já vêm empacotados dentro do pacote!</p>
+          </div>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Usar em qualquer Widget com suporte a IconTheme</h3>
+            <p>Importe e use os ícones nativamente com <code>CadIcons(CadIcon...)</code>:</p>
+            <pre><code>import 'package:cad_icons_flutter/cad_icons_flutter.dart';
+
+// Uso direto:
+CadIcons(CadIcon.draw3dCube)
+
+// Com tamanho e cor personalizados:
+CadIcons(
+  CadIcon.threeDPrint,
+  size: 32,
+  color: Colors.blueAccent,
+)
+
+// Em botões e Toolbars (herda cores do IconTheme automaticamente):
+IconButton(
+  icon: const CadIcons(CadIcon.modify3dExtrude),
+  onPressed: () {},
+)</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notification hidden" id="toast">
+    <div class="toast-icon">✓</div>
+    <div class="toast-message" id="toastMessage">Copiado para a área de transferência!</div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>CAD Icons Flutter • Mais de 250 ícones CAD vetoriais para Flutter</p>
+    <p class="footer-links">
+      <a href="https://pub.dev/packages/cad_icons_flutter" target="_blank" rel="noopener">pub.dev</a> • 
+      <a href="https://github.com/MadalyImbate/cad-icons-flutter" target="_blank" rel="noopener">GitHub</a> • 
+      <span>Licença MIT</span>
+    </p>
+  </footer>
+
+  <!-- Icons Data & Application Script -->
+  <script src="icons-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
