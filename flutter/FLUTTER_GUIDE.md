@@ -18,7 +18,7 @@ Ou declare no seu `pubspec.yaml`:
 dependencies:
   flutter:
     sdk: flutter
-  cad_icons_flutter: ^1.0.0
+  cad_icons_flutter: ^1.0.1
 ```
 
 > **Não é necessário configurar `assets:` no seu `pubspec.yaml`!** Todos os 250+ ícones já vêm empacotados dentro do pacote.
@@ -33,25 +33,42 @@ Importe o pacote:
 import 'package:cad_icons_flutter/cad_icons_flutter.dart';
 ```
 
-### Exemplo com `CadIcons`:
+### Estilo 1: Direto via `CadIcon` (Mais conciso)
+Como `CadIcon` implementa `Widget`, você pode passá-lo diretamente onde um `Widget` é esperado:
 
 ```dart
-// Renderização padrão:
-CadIcons(CadIcon.draw3dCube)
-
-// Com tamanho e cor personalizados:
-CadIcons(
-  CadIcon.threeDPrint,
-  size: 32,
-  color: Colors.blueAccent,
+IconButton(
+  onPressed: () {},
+  isSelected: true,
+  selectedIcon: const ToolBarIcons(ToolsIcon.select, color: Colors.blue),
+  icon: CadIcon.select,
+  tooltip: 'Select',
 )
+```
+
+### Estilo 2: Via `CadIcons` ou `ToolBarIcons`
+
+```dart
+IconButton(
+  onPressed: () {},
+  isSelected: true,
+  selectedIcon: const ToolBarIcons(ToolsIcon.select, color: Colors.blue),
+  icon: CadIcons(CadIcon.select),
+  tooltip: 'Select',
+)
+```
+
+### Estilo 3: Sobrescrita de Cor e Tamanho com `.call()`
+
+```dart
+CadIcon.select(color: Colors.blue, size: 28)
 ```
 
 ---
 
 ## 🎨 3. Compatibilidade Nativa com `IconTheme`
 
-O widget `CadIcons` responde automaticamente ao `IconTheme` do Flutter. Isso significa que ele herda o tamanho e a cor definidos pelo tema pai (como dentro de `AppBar`, `IconButton`, `FloatingActionButton` ou `ThemeData`):
+O widget `CadIcon` responde automaticamente ao `IconTheme` do Flutter. Isso significa que ele herda o tamanho e a cor definidos pelo tema pai (como dentro de `AppBar`, `IconButton`, `FloatingActionButton` ou `ThemeData`):
 
 ```dart
 IconTheme(
@@ -61,11 +78,11 @@ IconTheme(
   ),
   child: Row(
     children: const [
-      CadIcons(CadIcon.drawCircle),
+      CadIcon.drawCircle,
       SizedBox(width: 12),
-      CadIcons(CadIcon.modify3dExtrude),
+      CadIcon.modify3dExtrude,
       SizedBox(width: 12),
-      CadIcons(CadIcon.measureDistance),
+      CadIcon.measureDistance,
     ],
   ),
 )
@@ -75,9 +92,9 @@ IconTheme(
 
 ## 🔍 4. Hover Preview no VS Code e Android Studio
 
-Cada valor do enum `CadIcon` inclui documentação e preview remoto em markdown:
+Cada constante de `CadIcon` inclui documentação e preview remoto em markdown:
 
-Ao passar o mouse por cima de `CadIcon.draw3dCube` ou `CadIcon.assemblyExplodedView`, a sua IDE exibirá uma pré-visualização vetorial imediata do ícone!
+Ao passar o mouse por cima de `CadIcon.draw3dCube` ou `CadIcon.select`, a sua IDE exibirá uma pré-visualização vetorial imediata do ícone!
 
 ---
 

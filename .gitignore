@@ -1,3 +1,6 @@
+.dart_tool/
+.packages
+build/
 node_modules/
 .DS_Store
 Thumbs.db

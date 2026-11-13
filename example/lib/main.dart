@@ -30,14 +30,16 @@ class CadIconsHomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('CAD Icons Flutter'),
         actions: [
+          // Pattern A: CadIcons widget
           IconButton(
             tooltip: '3D Print',
             icon: const CadIcons(CadIcon.threeDPrint),
             onPressed: () {},
           ),
+          // Pattern B: Direct CadIcon widget
           IconButton(
             tooltip: 'Coordinates 3D',
-            icon: const CadIcons(CadIcon.coordinates3dXyz),
+            icon: CadIcon.coordinates3dXyz,
             onPressed: () {},
           ),
         ],
@@ -48,8 +50,8 @@ class CadIconsHomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Sample CAD Toolbar',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              'Sample CAD Toolbar (Supports both CadIcons and CadIcon directly)',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Card(
@@ -58,44 +60,41 @@ class CadIconsHomeScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    // User's exact Pattern 1:
                     IconButton(
-                      tooltip: 'Draw 3D Cube',
-                      icon: const CadIcons(
-                        CadIcon.draw3dCube,
-                        color: Colors.blueAccent,
-                      ),
                       onPressed: () {},
+                      isSelected: true,
+                      selectedIcon: const ToolBarIcons(
+                        ToolsIcon.select,
+                        color: Colors.blue,
+                      ),
+                      icon: const CadIcons(CadIcon.select),
+                      tooltip: 'Select (via CadIcons)',
                     ),
+
+                    // User's exact Pattern 2:
+                    IconButton(
+                      onPressed: () {},
+                      isSelected: false,
+                      selectedIcon: const ToolBarIcons(
+                        ToolsIcon.select,
+                        color: Colors.blue,
+                      ),
+                      icon: CadIcon.select,
+                      tooltip: 'Select (direct CadIcon)',
+                    ),
+
+                    // Inline override via .call():
                     IconButton(
                       tooltip: 'Extrude 3D',
-                      icon: const CadIcons(
-                        CadIcon.modify3dExtrude,
-                        color: Colors.green,
-                      ),
+                      icon: CadIcon.modify3dExtrude(color: Colors.green),
                       onPressed: () {},
                     ),
-                    IconButton(
-                      tooltip: 'Fillet / Round',
-                      icon: const CadIcons(
-                        CadIcon.modifyCornersRound,
-                        color: Colors.amber,
-                      ),
-                      onPressed: () {},
-                    ),
+
+                    // Measure Distance
                     IconButton(
                       tooltip: 'Measure Distance',
-                      icon: const CadIcons(
-                        CadIcon.measureDistance,
-                        color: Colors.deepPurple,
-                      ),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      tooltip: 'CNC Milling',
-                      icon: const CadIcons(
-                        CadIcon.cncMilling,
-                        color: Colors.redAccent,
-                      ),
+                      icon: CadIcon.measureDistance(color: Colors.deepPurple),
                       onPressed: () {},
                     ),
                   ],
@@ -104,24 +103,24 @@ class CadIconsHomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             const Text(
-              'Native IconTheme Compatibility Test',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              'Native IconTheme Compatibility',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             IconTheme(
               data: const IconThemeData(
-                size: 36,
+                size: 32,
                 color: Colors.teal,
               ),
               child: Row(
                 children: const [
-                  CadIcons(CadIcon.assemblyExplodedView),
+                  CadIcon.assemblyExplodedView,
                   SizedBox(width: 16),
-                  CadIcons(CadIcon.constraintParallel),
+                  CadIcon.constraintParallel,
                   SizedBox(width: 16),
-                  CadIcons(CadIcon.drawCircle),
+                  CadIcon.drawCircle,
                   SizedBox(width: 16),
-                  CadIcons(CadIcon.toolpath),
+                  CadIcon.toolpath,
                 ],
               ),
             ),
