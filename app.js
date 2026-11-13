@@ -1,6 +1,6 @@
 /**
- * CAD Icons Catalog - Flutter
- * Fast, reactive Vanilla JavaScript App
+ * CAD Icons Catalog — Flutter
+ * Minimalist shadcn/ui & Iconsax inspired interaction engine
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,13 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let searchQuery = '';
   let activeIconIndex = 0;
 
-  // Grid customization state
-  let currentGridColor = '#38bdf8';
+  // Grid styling state
+  let currentGridColor = 'default';
   let currentGridSize = 'md';
 
   // Modal customization state
-  let modalColor = '#38bdf8';
-  let modalFlutterColorName = 'Colors.lightBlue';
+  let modalColor = 'default';
+  let modalFlutterColorName = 'Colors.white';
   let modalSize = 48;
   let modalBg = 'checker-dark';
   let activeTab = 'package';
@@ -26,22 +26,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const iconsGrid = document.getElementById('iconsGrid');
   const searchInput = document.getElementById('searchInput');
   const clearSearchBtn = document.getElementById('clearSearchBtn');
-  const categoriesBar = document.getElementById('categoriesBar');
   const visibleCount = document.getElementById('visibleCount');
   const totalCount = document.getElementById('totalCount');
   const emptyState = document.getElementById('emptyState');
   const emptyQueryText = document.getElementById('emptyQueryText');
   const resetSearchBtn = document.getElementById('resetSearchBtn');
-  const activeFilterBadge = document.getElementById('activeFilterBadge');
+  const activeFilterChip = document.getElementById('activeFilterChip');
+  const activeFilterName = document.getElementById('activeFilterName');
+  const clearActiveFilterBtn = document.getElementById('clearActiveFilterBtn');
 
-  // Header controls
+  // Dropdowns (shadcn Selects)
+  const categoryTrigger = document.getElementById('categoryTrigger');
+  const categoryMenu = document.getElementById('categoryMenu');
+  const categorySelectedLabel = document.getElementById('categorySelectedLabel');
+  const categoryCountBadge = document.getElementById('categoryCountBadge');
+
+  const colorTrigger = document.getElementById('colorTrigger');
+  const colorMenu = document.getElementById('colorMenu');
+  const currentColorDot = document.getElementById('currentColorDot');
+  const currentColorText = document.getElementById('currentColorText');
+  const gridCustomColorInput = document.getElementById('gridCustomColorInput');
+
+  // Segment Buttons
+  const sizeBtns = document.querySelectorAll('.segmented-control .segment-btn');
+
+  // Header Actions
   const themeToggleBtn = document.getElementById('themeToggleBtn');
-  const gridCustomColor = document.getElementById('gridCustomColor');
-  const gridColorDots = document.querySelectorAll('.color-picker-control .color-dot[data-color]');
-  const sizeBtns = document.querySelectorAll('.size-btn');
   const openGuideBtn = document.getElementById('openGuideBtn');
 
-  // Detail Modal Elements
+  // Detail Dialog Elements
   const detailModal = document.getElementById('detailModal');
   const modalBackdrop = document.getElementById('modalBackdrop');
   const modalCloseBtn = document.getElementById('modalCloseBtn');
@@ -54,9 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalSizeSlider = document.getElementById('modalSizeSlider');
   const modalSizeVal = document.getElementById('modalSizeVal');
   const modalCustomColor = document.getElementById('modalCustomColor');
-  const modalColorDots = document.querySelectorAll('.m-color-dot[data-color]');
-  const modalBgBtns = document.querySelectorAll('.bg-btn');
-  const tabBtns = document.querySelectorAll('.tab-btn');
+  const modalColorDots = document.querySelectorAll('.m-dot[data-color]');
+  const modalBgBtns = document.querySelectorAll('.bg-opt-btn');
+  const tabTriggers = document.querySelectorAll('.tab-trigger');
   const tabPanes = document.querySelectorAll('.tab-pane');
   const codePackage = document.getElementById('code-package');
   const codeAsset = document.getElementById('code-asset');
@@ -66,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const copyEnumBtn = document.getElementById('copyEnumBtn');
   const downloadSvgBtn = document.getElementById('downloadSvgBtn');
 
-  // Guide Modal Elements
+  // Guide Dialog Elements
   const guideModal = document.getElementById('guideModal');
   const guideBackdrop = document.getElementById('guideBackdrop');
   const guideCloseBtn = document.getElementById('guideCloseBtn');
@@ -76,16 +89,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const toastMessage = document.getElementById('toastMessage');
   let toastTimer = null;
 
-  // --- Initialize UI ---
+  // --- Initialization ---
   totalCount.textContent = allIcons.length;
-  renderCategories();
-  applyStoredTheme();
+  categoryCountBadge.textContent = allIcons.length;
+  initTheme();
+  buildCategoryMenu();
   filterAndRender();
 
   // ============================================================
-  // Categories Rendering & Filtering
+  // Theme Management (shadcn standard .dark on <html>)
   // ============================================================
-  function getCategoriesWithCounts() {
+  function initTheme() {
+    const saved = localStorage.getItem('cad_icons_theme');
+    if (saved === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+  }
+
+  themeToggleBtn.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('cad_icons_theme', isDark ? 'dark' : 'light');
+    if (currentGridColor === 'default') {
+      currentColorDot.style.background = 'currentColor';
+    }
+  });
+
+  // ============================================================
+  // Category Dropdown (shadcn Select)
+  // ============================================================
+  function getCategoryCounts() {
     const counts = { all: allIcons.length };
     allIcons.forEach(icon => {
       counts[icon.category] = (counts[icon.category] || 0) + 1;
@@ -93,50 +127,141 @@ document.addEventListener('DOMContentLoaded', () => {
     return counts;
   }
 
-  function renderCategories() {
-    const counts = getCategoriesWithCounts();
+  function buildCategoryMenu() {
+    const counts = getCategoryCounts();
     const categories = Object.keys(counts).filter(c => c !== 'all').sort();
 
-    categoriesBar.innerHTML = '';
+    categoryMenu.innerHTML = '';
 
-    // "Todos" button
-    const allPill = document.createElement('button');
-    allPill.className = `cat-pill ${selectedCategory === 'all' ? 'active' : ''}`;
-    allPill.innerHTML = `Todos <span class="cat-count">${counts.all}</span>`;
-    allPill.addEventListener('click', () => setCategory('all'));
-    categoriesBar.appendChild(allPill);
+    // "Todas as Categorias" item
+    const allItem = document.createElement('div');
+    allItem.className = `dropdown-item ${selectedCategory === 'all' ? 'active' : ''}`;
+    allItem.dataset.category = 'all';
+    allItem.innerHTML = `
+      <div class="item-left">
+        <span>Todas as Categorias</span>
+      </div>
+      <span class="item-count">${counts.all}</span>
+    `;
+    allItem.addEventListener('click', () => selectCategory('all', 'Todas as Categorias', counts.all));
+    categoryMenu.appendChild(allItem);
 
+    // Individual categories
     categories.forEach(cat => {
-      const pill = document.createElement('button');
-      pill.className = `cat-pill ${selectedCategory === cat ? 'active' : ''}`;
-      pill.innerHTML = `${cat} <span class="cat-count">${counts[cat]}</span>`;
-      pill.addEventListener('click', () => setCategory(cat));
-      categoriesBar.appendChild(pill);
+      const item = document.createElement('div');
+      item.className = `dropdown-item ${selectedCategory === cat ? 'active' : ''}`;
+      item.dataset.category = cat;
+      item.innerHTML = `
+        <div class="item-left">
+          <span>${cat}</span>
+        </div>
+        <span class="item-count">${counts[cat]}</span>
+      `;
+      item.addEventListener('click', () => selectCategory(cat, cat, counts[cat]));
+      categoryMenu.appendChild(item);
     });
   }
 
-  function setCategory(cat) {
+  function selectCategory(cat, label, count) {
     selectedCategory = cat;
-    document.querySelectorAll('.cat-pill').forEach(pill => {
-      const isAll = cat === 'all' && pill.textContent.startsWith('Todos');
-      const isMatch = pill.textContent.startsWith(cat);
-      if (isAll || isMatch) {
-        pill.classList.add('active');
-        pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      } else {
-        pill.classList.remove('active');
-      }
+    categorySelectedLabel.textContent = label;
+    categoryCountBadge.textContent = count;
+    closeAllDropdowns();
+
+    // Update active class in menu
+    document.querySelectorAll('#categoryMenu .dropdown-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.category === cat);
     });
 
+    // Update active filter chip
     if (cat === 'all') {
-      activeFilterBadge.classList.add('hidden');
+      activeFilterChip.classList.add('hidden');
     } else {
-      activeFilterBadge.textContent = cat;
-      activeFilterBadge.classList.remove('hidden');
+      activeFilterName.textContent = label;
+      activeFilterChip.classList.remove('hidden');
     }
 
     filterAndRender();
   }
+
+  categoryTrigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    colorMenu.classList.add('hidden');
+    categoryMenu.classList.toggle('hidden');
+    categoryTrigger.setAttribute('aria-expanded', !categoryMenu.classList.contains('hidden'));
+  });
+
+  clearActiveFilterBtn.addEventListener('click', () => {
+    selectCategory('all', 'Todas as Categorias', allIcons.length);
+  });
+
+  // ============================================================
+  // Color Dropdown
+  // ============================================================
+  colorTrigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    categoryMenu.classList.add('hidden');
+    colorMenu.classList.toggle('hidden');
+  });
+
+  document.querySelectorAll('.color-swatch-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.color-swatch-item').forEach(el => el.classList.remove('active'));
+      item.classList.add('active');
+
+      const color = item.dataset.color;
+      currentGridColor = color;
+
+      if (color === 'default') {
+        currentColorDot.style.background = 'currentColor';
+        currentColorText.textContent = 'Padrão';
+      } else {
+        currentColorDot.style.background = color;
+        currentColorText.textContent = item.querySelector('span:last-child').textContent;
+      }
+
+      applyGridColor(color);
+      closeAllDropdowns();
+    });
+  });
+
+  gridCustomColorInput.addEventListener('input', (e) => {
+    const color = e.target.value;
+    currentGridColor = color;
+    currentColorDot.style.background = color;
+    currentColorText.textContent = color.toUpperCase();
+    document.querySelectorAll('.color-swatch-item').forEach(el => el.classList.remove('active'));
+    applyGridColor(color);
+  });
+
+  function applyGridColor(color) {
+    document.querySelectorAll('.icon-card-preview').forEach(el => {
+      el.style.color = color === 'default' ? '' : color;
+    });
+  }
+
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', () => {
+    closeAllDropdowns();
+  });
+
+  function closeAllDropdowns() {
+    categoryMenu.classList.add('hidden');
+    colorMenu.classList.add('hidden');
+    categoryTrigger.setAttribute('aria-expanded', 'false');
+  }
+
+  // ============================================================
+  // Size Segmented Control
+  // ============================================================
+  sizeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      sizeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentGridSize = btn.dataset.size;
+      iconsGrid.className = `icons-grid size-${currentGridSize}`;
+    });
+  });
 
   // ============================================================
   // Filtering & Rendering Grid
@@ -150,7 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!q) return true;
 
-      // Match name, title, tags, or enumName
       const matchName = icon.name.toLowerCase().includes(q);
       const matchTitle = icon.title.toLowerCase().includes(q);
       const matchEnum = icon.enumName && icon.enumName.toLowerCase().includes(q);
@@ -168,11 +292,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       iconsGrid.classList.remove('hidden');
       emptyState.classList.add('hidden');
-      renderGridIcons();
+      renderGrid();
     }
   }
 
-  function renderGridIcons() {
+  function renderGrid() {
     iconsGrid.innerHTML = '';
     const fragment = document.createDocumentFragment();
 
@@ -180,30 +304,23 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = document.createElement('div');
       card.className = 'icon-card';
       card.dataset.index = index;
+      card.title = `${icon.name} (${icon.category})`;
 
       card.innerHTML = `
-        <div class="card-quick-actions">
-          <button class="card-quick-btn" title="Copiar código CadIcons(CadIcon.${icon.enumName})" data-action="quick-copy">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-            </svg>
-          </button>
-        </div>
-        <div class="icon-card-preview" style="color: ${currentGridColor};">
+        <div class="icon-card-preview" style="${currentGridColor !== 'default' ? `color: ${currentGridColor};` : ''}">
           ${icon.svg}
         </div>
         <div class="icon-card-title">${icon.name}</div>
-        <div class="icon-card-cat">${icon.category}</div>
+        <button class="card-quick-pill" data-action="quick-copy">Copiar</button>
       `;
 
-      // Click card to open modal
       card.addEventListener('click', (e) => {
         if (e.target.closest('[data-action="quick-copy"]')) {
           e.stopPropagation();
-          copyFlutterSnippetQuick(icon);
+          copySnippetQuick(icon);
           return;
         }
-        openDetailModal(index);
+        openDetailDialog(index);
       });
 
       fragment.appendChild(card);
@@ -212,22 +329,17 @@ document.addEventListener('DOMContentLoaded', () => {
     iconsGrid.appendChild(fragment);
   }
 
-  // Quick copy snippet from card hover button
-  function copyFlutterSnippetQuick(icon) {
-    const snippet = `CadIcons(CadIcon.${icon.enumName})`;
-    copyToClipboard(snippet, `Snippet de "CadIcon.${icon.enumName}" copiado!`);
+  function copySnippetQuick(icon) {
+    const code = `CadIcons(CadIcon.${icon.enumName})`;
+    copyToClipboard(code, `CadIcon.${icon.enumName} copiado!`);
   }
 
   // ============================================================
-  // Search Box Event Listeners
+  // Search Input Handling
   // ============================================================
   searchInput.addEventListener('input', (e) => {
     searchQuery = e.target.value;
-    if (searchQuery.length > 0) {
-      clearSearchBtn.classList.add('visible');
-    } else {
-      clearSearchBtn.classList.remove('visible');
-    }
+    clearSearchBtn.classList.toggle('visible', searchQuery.length > 0);
     filterAndRender();
   });
 
@@ -243,119 +355,66 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.value = '';
     searchQuery = '';
     clearSearchBtn.classList.remove('visible');
-    selectedCategory = 'all';
-    renderCategories();
-    activeFilterBadge.classList.add('hidden');
-    filterAndRender();
+    selectCategory('all', 'Todas as Categorias', allIcons.length);
   });
 
-  // Keyboard shortcut '/' to search
+  // Keyboard shortcut: '⌘K' or '/' to focus search, Esc to close
   document.addEventListener('keydown', (e) => {
-    if (e.key === '/' && document.activeElement !== searchInput && !isModalOpen()) {
+    if ((e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) && document.activeElement !== searchInput && !isDialogOpen()) {
       e.preventDefault();
       searchInput.focus();
     } else if (e.key === 'Escape') {
-      if (isModalOpen()) {
-        closeModals();
+      if (isDialogOpen()) {
+        closeDialogs();
+      } else if (!categoryMenu.classList.contains('hidden') || !colorMenu.classList.contains('hidden')) {
+        closeAllDropdowns();
       } else if (searchInput.value) {
         searchInput.value = '';
         searchQuery = '';
         clearSearchBtn.classList.remove('visible');
         filterAndRender();
       }
-    } else if (isModalOpen() && guideModal.classList.contains('hidden')) {
+    } else if (isDialogOpen() && guideModal.classList.contains('hidden')) {
       if (e.key === 'ArrowLeft') {
-        navigateModal(-1);
+        navigateDialog(-1);
       } else if (e.key === 'ArrowRight') {
-        navigateModal(1);
+        navigateDialog(1);
       }
     }
   });
 
-  function isModalOpen() {
+  function isDialogOpen() {
     return !detailModal.classList.contains('hidden') || !guideModal.classList.contains('hidden');
   }
 
-  function closeModals() {
+  function closeDialogs() {
     detailModal.classList.add('hidden');
     guideModal.classList.add('hidden');
     document.body.style.overflow = '';
   }
 
   // ============================================================
-  // Header Controls (Color, Size, Theme)
+  // Detail Dialog (shadcn Dialog style)
   // ============================================================
-  gridColorDots.forEach(dot => {
-    dot.addEventListener('click', () => {
-      gridColorDots.forEach(d => d.classList.remove('active'));
-      dot.classList.add('active');
-      const color = dot.dataset.color;
-      updateGridColor(color);
-    });
-  });
-
-  gridCustomColor.addEventListener('input', (e) => {
-    gridColorDots.forEach(d => d.classList.remove('active'));
-    updateGridColor(e.target.value);
-  });
-
-  function updateGridColor(color) {
-    currentGridColor = color;
-    document.querySelectorAll('.icon-card-preview').forEach(el => {
-      el.style.color = color;
-    });
-  }
-
-  sizeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      sizeBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentGridSize = btn.dataset.size;
-      iconsGrid.className = `icons-grid size-${currentGridSize}`;
-    });
-  });
-
-  themeToggleBtn.addEventListener('click', () => {
-    if (document.body.classList.contains('theme-dark')) {
-      document.body.classList.replace('theme-dark', 'theme-light');
-      localStorage.setItem('cad_icon_theme', 'light');
-    } else {
-      document.body.classList.replace('theme-light', 'theme-dark');
-      localStorage.setItem('cad_icon_theme', 'dark');
-    }
-  });
-
-  function applyStoredTheme() {
-    const saved = localStorage.getItem('cad_icon_theme');
-    if (saved === 'light') {
-      document.body.classList.replace('theme-dark', 'theme-light');
-    } else {
-      document.body.classList.replace('theme-light', 'theme-dark');
-    }
-  }
-
-  // ============================================================
-  // Detail Modal & Interactive Preview
-  // ============================================================
-  function openDetailModal(index) {
+  function openDetailDialog(index) {
     activeIconIndex = index;
-    updateModalContent();
+    updateDialogContent();
     detailModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
   }
 
-  function navigateModal(direction) {
+  function navigateDialog(step) {
     if (filteredIcons.length === 0) return;
-    activeIconIndex = (activeIconIndex + direction + filteredIcons.length) % filteredIcons.length;
-    updateModalContent();
+    activeIconIndex = (activeIconIndex + step + filteredIcons.length) % filteredIcons.length;
+    updateDialogContent();
   }
 
-  modalPrevBtn.addEventListener('click', () => navigateModal(-1));
-  modalNextBtn.addEventListener('click', () => navigateModal(1));
-  modalCloseBtn.addEventListener('click', closeModals);
-  modalBackdrop.addEventListener('click', closeModals);
+  modalPrevBtn.addEventListener('click', () => navigateDialog(-1));
+  modalNextBtn.addEventListener('click', () => navigateDialog(1));
+  modalCloseBtn.addEventListener('click', closeDialogs);
+  modalBackdrop.addEventListener('click', closeDialogs);
 
-  function updateModalContent() {
+  function updateDialogContent() {
     const icon = filteredIcons[activeIconIndex];
     if (!icon) return;
 
@@ -363,21 +422,28 @@ document.addEventListener('DOMContentLoaded', () => {
     modalIconCategory.textContent = icon.category;
     modalEnumText.textContent = `CadIcon.${icon.enumName}`;
 
-    // Render SVG inside container
     modalSvgContainer.innerHTML = icon.svg;
     modalSvgContainer.style.width = `${modalSize}px`;
     modalSvgContainer.style.height = `${modalSize}px`;
-    modalSvgContainer.style.color = modalColor;
 
-    updateCodeSnippets(icon);
+    applyModalSvgColor();
+    updateDialogSnippets(icon);
   }
 
-  function updateCodeSnippets(icon) {
+  function applyModalSvgColor() {
+    if (modalColor === 'default') {
+      modalSvgContainer.style.color = 'currentColor';
+    } else {
+      modalSvgContainer.style.color = modalColor;
+    }
+  }
+
+  function updateDialogSnippets(icon) {
     const colorCode = modalFlutterColorName.startsWith('Colors.')
       ? modalFlutterColorName
       : `Color(0xFF${modalColor.replace('#', '').toUpperCase()})`;
 
-    // Snippet 1: CadIcons (Package recommended)
+    // Tab 1: CadIcons (Standard Flutter widget)
     codePackage.textContent = 
 `CadIcons(
   CadIcon.${icon.enumName},
@@ -385,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
   color: ${colorCode},
 )`;
 
-    // Snippet 2: SvgPicture.asset via package
+    // Tab 2: SvgPicture.asset via package
     codeAsset.textContent = 
 `SvgPicture.asset(
   'assets/icons/${icon.filename}',
@@ -395,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
   theme: const SvgTheme(currentColor: ${colorCode}),
 )`;
 
-    // Snippet 3: SvgPicture.string (inline SVG)
+    // Tab 3: SvgPicture.string
     codeString.textContent = 
 `SvgPicture.string(
   '''${icon.svg}''',
@@ -404,40 +470,40 @@ document.addEventListener('DOMContentLoaded', () => {
   theme: const SvgTheme(currentColor: ${colorCode}),
 )`;
 
-    // Snippet 4: Raw SVG
+    // Tab 4: Raw SVG
     codeRaw.textContent = icon.svg;
   }
 
-  // Modal Background selection
+  // Dialog Background toggles
   modalBgBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       modalBgBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       modalBg = btn.dataset.bg;
-      modalPreviewBox.className = `preview-box ${modalBg}`;
+      modalPreviewBox.className = `canvas-box ${modalBg}`;
     });
   });
 
-  // Modal Size slider
+  // Dialog Size slider
   modalSizeSlider.addEventListener('input', (e) => {
     modalSize = parseInt(e.target.value, 10);
     modalSizeVal.textContent = `${modalSize}px`;
     modalSvgContainer.style.width = `${modalSize}px`;
     modalSvgContainer.style.height = `${modalSize}px`;
     const icon = filteredIcons[activeIconIndex];
-    if (icon) updateCodeSnippets(icon);
+    if (icon) updateDialogSnippets(icon);
   });
 
-  // Modal Color swatches
+  // Dialog Color palette
   modalColorDots.forEach(dot => {
     dot.addEventListener('click', () => {
       modalColorDots.forEach(d => d.classList.remove('active'));
       dot.classList.add('active');
       modalColor = dot.dataset.color;
       modalFlutterColorName = dot.dataset.flutter || 'Colors.blue';
-      modalSvgContainer.style.color = modalColor;
+      applyModalSvgColor();
       const icon = filteredIcons[activeIconIndex];
-      if (icon) updateCodeSnippets(icon);
+      if (icon) updateDialogSnippets(icon);
     });
   });
 
@@ -445,18 +511,18 @@ document.addEventListener('DOMContentLoaded', () => {
     modalColorDots.forEach(d => d.classList.remove('active'));
     modalColor = e.target.value;
     modalFlutterColorName = `Color(0xFF${modalColor.replace('#', '').toUpperCase()})`;
-    modalSvgContainer.style.color = modalColor;
+    applyModalSvgColor();
     const icon = filteredIcons[activeIconIndex];
-    if (icon) updateCodeSnippets(icon);
+    if (icon) updateDialogSnippets(icon);
   });
 
-  // Modal Tabs
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabBtns.forEach(b => b.classList.remove('active'));
+  // Dialog Tabs
+  tabTriggers.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabTriggers.forEach(t => t.classList.remove('active'));
       tabPanes.forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      activeTab = btn.dataset.tab;
+      tab.classList.add('active');
+      activeTab = tab.dataset.tab;
       document.getElementById(`tab-${activeTab}`).classList.add('active');
     });
   });
@@ -468,22 +534,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const blob = new Blob([icon.svg], { type: 'image/svg+xml;charset=utf-8' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = icon.filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = icon.filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    showToast(`Download de "${icon.filename}" concluído!`);
+    showToast(`Arquivo "${icon.filename}" baixado!`);
   });
 
   // Copy Enum Button
   copyEnumBtn.addEventListener('click', () => {
     const icon = filteredIcons[activeIconIndex];
     if (!icon) return;
-    copyToClipboard(`CadIcon.${icon.enumName}`, 'Enum copiado!');
+    copyToClipboard(`CadIcon.${icon.enumName}`, `CadIcon.${icon.enumName} copiado!`);
   });
 
   // Copy Code Buttons inside tabs
@@ -492,24 +558,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetId = btn.dataset.target;
       const codeEl = document.getElementById(targetId);
       if (codeEl) {
-        copyToClipboard(codeEl.textContent, 'Código Flutter copiado com sucesso!');
+        copyToClipboard(codeEl.textContent, 'Código copiado com sucesso!');
       }
     });
   });
 
-  // ============================================================
-  // Flutter Guide Modal
-  // ============================================================
+  // Guide Dialog
   openGuideBtn.addEventListener('click', () => {
     guideModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
   });
-
-  guideCloseBtn.addEventListener('click', closeModals);
-  guideBackdrop.addEventListener('click', closeModals);
+  guideCloseBtn.addEventListener('click', closeDialogs);
+  guideBackdrop.addEventListener('click', closeDialogs);
 
   // ============================================================
-  // Clipboard & Toast System
+  // Clipboard & Toast System (Sonner style)
   // ============================================================
   function copyToClipboard(text, message = 'Copiado para a área de transferência!') {
     if (navigator.clipboard && window.isSecureContext) {
@@ -532,7 +595,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       document.execCommand('copy');
       showToast(message);
-    } catch (err) {
+    } catch (e) {
       showToast('Falha ao copiar automaticamente.');
     }
     document.body.removeChild(textarea);
@@ -545,6 +608,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (toastTimer) clearTimeout(toastTimer);
     toastTimer = setTimeout(() => {
       toast.classList.add('hidden');
-    }, 2800);
+    }, 2200);
   }
 });
